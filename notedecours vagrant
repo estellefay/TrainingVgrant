@@ -1,0 +1,42 @@
+#Note de cours
+
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/stretch64"
+  #config.vm.synced_folder ".", "/vagrant', type:"virtualbox"
+  config.vm.provision "shell", path: "install-tools.sh"
+
+  config.vm.define "git" do |git|
+    config.vm.network "private_network", ip:"192.168.60.10"
+    config.vm.provision"shell", path: "install-git-bar.sh"
+  end
+
+  config.vm.define "web" do |web|
+    config.vm.network "private_network", ip:"192.168.60.10"
+    config.vm.provision"shell", path: "install-apach.sh"
+  end
+end
+
+# vagrant up git ( je lance ma machine aui à le nom de git qu'ont à definie plus haut   )
+# lien symbolique ln -s de à vers b
+
+script double site interet
+ vagrant up # lancer la vagrant
+ vagrant ssh web #lancer la vagrant web
+ sudo nano /etc/apache2/sites-available/000-default.conf # crée le chemin du site 1 et modifier dans le fichier le chemins du site et le nom pour l'adresse ip
+ cd /etc/apache2/sites-available/ #rentrer dans le ficheir
+ sudo cp 000-default.conf /etc/apache2/sites-available/monsite2.conf # de l'intérieur du fichier je copie et je colle sous un autre nom au même endroit
+ sudo nano monsite2.conf  #modifier le fichier monsite2
+ cd ../ #retour en arrière
+ cd sites-enabled/ # Je rentre dans le fichier site enable
+ sudo ln -s /etc/apache2/sites-available/monsite2.conf /etc/apache2/sites-enabled/monsite2.conf
+# JE CREE UN LIENS DIRECT entre mes deux fichier qui sont dans enable et available
+sudo service apache2 restart #RElancer appache2
+
+
+# git hook :
+post-uptdate
+faire fichier bash
+
+git clone / tmp/foo.git
